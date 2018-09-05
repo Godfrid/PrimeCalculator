@@ -9,7 +9,7 @@ public class SqrtIntervalDivider {
         thresholds = new long[divideInto + 1];
         thresholds[0] = 3;
         thresholds[divideInto] = (long) Math.sqrt(number);
-        //TODO: Handle: to low number or too big divider could close invalid intervals.
+        //TODO: Handle: too low number or too big divider could close invalid intervals.
         for (int i = 1; i < divideInto; i++){
             double x = ((Math.sqrt(number)/divideInto) * i);
             thresholds[i] = (long) x;
