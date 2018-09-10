@@ -34,6 +34,6 @@ public class FermatPrimalityTest implements Runnable {
 
     @Override
     public void run() {
-
+        test();
     }
 }
