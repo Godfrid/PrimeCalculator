@@ -18,7 +18,4 @@ public  class  GreatestCommonDivisor {
         return number1.gcd(number2);
     }
 
-
-
-
 }

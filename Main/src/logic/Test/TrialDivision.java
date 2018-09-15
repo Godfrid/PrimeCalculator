@@ -1,4 +1,4 @@
-package logic;
+package logic.Test;
 
 
 public class TrialDivision implements Runnable {
@@ -35,11 +35,11 @@ public class TrialDivision implements Runnable {
         test();
     }
 
-    public boolean getIsPrime() {
+    public boolean isPrime() {
         return isPrime;
     }
 
-    public boolean getIsFinished() {
+    public boolean isFinished() {
         return isFinished;
     }
 }

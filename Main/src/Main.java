@@ -1,9 +1,7 @@
-import logic.AKS;
 import logic.TDTaskAssigner.SqrtIntervalDivider;
-import logic.TrialDivision;
+import logic.Test.TrialDivision;
 
 import java.math.BigInteger;
-import java.sql.Time;
 
 import static java.lang.Thread.sleep;
 
@@ -21,15 +19,15 @@ public class Main {
         SqrtIntervalDivider kek = new SqrtIntervalDivider(probe, 1);
         TrialDivision first = new TrialDivision(probe ,kek.getThresholds()[0], kek.getThresholds()[1]);
         first.test();
-        System.out.println("finished: " + first.getIsFinished());
-        System.out.println("Prime: " + first.getIsPrime());
+        System.out.println("finished: " + first.isFinished());
+        System.out.println("Prime: " + first.isPrime());
 
 /*        AKS bigtest = new AKS (probeBig);*/
 
 /*        while(true){
-            if (first.getIsFinished()){
-                System.out.println("finished: " + first.getIsFinished());
-                System.out.println("Prime: " + first.getIsPrime());
+            if (first.isFinished()){
+                System.out.println("finished: " + first.isFinished());
+                System.out.println("Prime: " + first.isPrime());
                 break;
             }
             sleep(50000);

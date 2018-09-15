@@ -1,18 +1,18 @@
-package logic;
+package logic.Test;
 
-public class FermatPrimalityTest implements Runnable {
+public class Fermat implements Runnable {
     private long a;
     private long p;
     private int tests;
     private boolean isPrime;
 
-    public FermatPrimalityTest (long a, long p){
+    public Fermat(long a, long p){
         this.a = a;
         this.p = p;
         this.tests = 1;
     }
 
-    public FermatPrimalityTest (long a, long p, int tests) {
+    public Fermat(long a, long p, int tests) {
         this.a = a; // testing number
         this.p = p; // number tested
         this.tests = tests;
