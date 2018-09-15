@@ -42,4 +42,8 @@ public class TrialDivision implements Runnable {
     public boolean isFinished() {
         return isFinished;
     }
+
+    public long getStartAt() {
+        return startAt;
+    }
 }
