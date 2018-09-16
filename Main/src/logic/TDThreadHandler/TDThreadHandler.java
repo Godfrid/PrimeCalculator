@@ -42,7 +42,7 @@ public class TDThreadHandler implements Observer, Runnable {
         }
     }
 
-//TODO: Kill threads after one returns false. IF threads finsih at the same time only one call.
+//TODO: IF threads finsih at the same time only one call.
 
     @Override
     public void update(Observable o, Object arg) {
@@ -55,6 +55,7 @@ public class TDThreadHandler implements Observer, Runnable {
             }
         }
     }
+
 // Might not need to be on a different path.
     @Override
     public void run() {

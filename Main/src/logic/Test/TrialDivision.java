@@ -9,7 +9,7 @@ public class TrialDivision extends Observable implements Runnable {
     private long startAt;
     private long endAt;
     private boolean isPrime;
-    private boolean isFinished;
+    private volatile boolean isFinished;
 
     public TrialDivision(long number, long startAt, long endAt) {
         this.number = number;
@@ -21,8 +21,7 @@ public class TrialDivision extends Observable implements Runnable {
     public void test() {
         long divider = (startAt % 2 == 0) ? startAt + 1 : startAt;
         System.out.println(" num: " + number + " startAt: " + startAt + " endAt: " + endAt);
-        while (divider <= endAt) {
-            if (isFinished) return;
+        while (divider <= endAt & !isFinished) {
             if (number % divider == 0) {
                 isPrime = false;
                 System.out.println("Divider: " + divider);
@@ -35,9 +34,11 @@ public class TrialDivision extends Observable implements Runnable {
     }
 
     private void Finish() {
-        isFinished = true;
-        setChanged();
-        notifyObservers(isFinished);
+        if (!isFinished) {
+            isFinished = true;
+            setChanged();
+            notifyObservers(isFinished);
+        }
     }
 
     @Override

@@ -7,7 +7,7 @@ import static java.lang.Thread.sleep;
 public class TDThreadEvaluator {
 
     private TrialDivision[] trialDivisions;
-    private boolean isFinished;
+    private volatile boolean isFinished;
     private boolean isPrime;
 
     public TDThreadEvaluator(TrialDivision[] trialDivisions) {
