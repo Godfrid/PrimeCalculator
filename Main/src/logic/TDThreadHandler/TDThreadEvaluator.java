@@ -1,8 +1,10 @@
-package logic;
+package logic.TDThreadHandler;
 
 import logic.Test.TrialDivision;
 
-public class TDThreadEvaluator implements Runnable {
+import static java.lang.Thread.sleep;
+
+public class TDThreadEvaluator {
 
     private TrialDivision[] trialDivisions;
     private boolean isFinished;
@@ -14,11 +16,14 @@ public class TDThreadEvaluator implements Runnable {
         this.isPrime = true;
     }
 
-    private void evaluateThreads() {
+    public synchronized void evaluateThreads() {
+        System.out.println("Eval started");
         if (isFinished) {
+            System.out.println("Eval ended short");
             return;
         }
         int i = 0;
+
         for (TrialDivision trialDivision: trialDivisions) {
             if (trialDivision.isFinished() & !trialDivision.isPrime()) {
                 isFinished = true;
@@ -26,16 +31,13 @@ public class TDThreadEvaluator implements Runnable {
                 break;
             } else if (trialDivision.isFinished() & trialDivision.isPrime()) {
                 i++;
-                if (i == trialDivisions.length){
+                if (i == trialDivisions.length) {
                     isFinished = true;
                 }
             }
         }
-    }
 
-    @Override
-    public void run() {
-        while (!isFinished) evaluateThreads();
+    System.out.println("Eval ended");
     }
 
     public boolean isFinished() {
@@ -45,4 +47,5 @@ public class TDThreadEvaluator implements Runnable {
     public boolean isPrime() {
         return isPrime;
     }
+
 }

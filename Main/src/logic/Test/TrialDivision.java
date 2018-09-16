@@ -1,7 +1,9 @@
 package logic.Test;
 
 
-public class TrialDivision implements Runnable {
+import java.util.Observable;
+
+public class TrialDivision extends Observable implements Runnable {
 
     private long number;
     private long startAt;
@@ -18,8 +20,9 @@ public class TrialDivision implements Runnable {
 
     public void test() {
         long divider = (startAt % 2 == 0) ? startAt + 1 : startAt;
-        System.out.println(" num: " + number + " startAt: " + startAt + " divider: " + divider + " endAt: " + endAt);
+        System.out.println(" num: " + number + " startAt: " + startAt + " endAt: " + endAt);
         while (divider <= endAt) {
+            if (isFinished) return;
             if (number % divider == 0) {
                 isPrime = false;
                 System.out.println("Divider: " + divider);
@@ -27,7 +30,14 @@ public class TrialDivision implements Runnable {
             }
             divider += 2;
         }
+        this.Finish();
+        //evaluate
+    }
+
+    private void Finish() {
         isFinished = true;
+        setChanged();
+        notifyObservers(isFinished);
     }
 
     @Override
@@ -43,7 +53,16 @@ public class TrialDivision implements Runnable {
         return isFinished;
     }
 
+    public void stop () {
+        isFinished = true;
+    }
+
+// Just for testing:
     public long getStartAt() {
         return startAt;
+    }
+
+    public long getEndAt() {
+        return endAt;
     }
 }

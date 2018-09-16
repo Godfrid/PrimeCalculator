@@ -1,4 +1,4 @@
-import logic.TDTaskAssigner.SqrtIntervalDivider;
+import logic.TDThreadHandler.SqrtIntervalDivider;
 import logic.Test.TrialDivision;
 
 import java.math.BigInteger;

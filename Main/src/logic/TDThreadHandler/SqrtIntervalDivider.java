@@ -1,6 +1,4 @@
-package logic.TDTaskAssigner;
-
-import java.lang.reflect.Array;
+package logic.TDThreadHandler;
 
 public class SqrtIntervalDivider {
     private long[] thresholds;

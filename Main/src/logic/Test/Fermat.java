@@ -1,5 +1,5 @@
 package logic.Test;
-
+// To be removed?
 public class Fermat implements Runnable {
     private long a;
     private long p;
@@ -17,7 +17,7 @@ public class Fermat implements Runnable {
         this.p = p; // number tested
         this.tests = tests;
     }
-// TODO: More tests, and fast modular exponentiation.
+
     public void test() {
         for (int testsMade = 0; tests > testsMade; testsMade++){
             long x = (long) Math.pow(a, p-1) % p;
