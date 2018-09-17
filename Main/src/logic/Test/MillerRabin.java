@@ -30,7 +30,6 @@ public class MillerRabin {
         return aToPower.equals(nMinusOne);
     }
 
-
     public void test(BigInteger n) {
         for (int repeat = 0; repeat < 20; repeat++) {
 

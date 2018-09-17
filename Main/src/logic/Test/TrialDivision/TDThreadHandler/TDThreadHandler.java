@@ -48,7 +48,6 @@ public class TDThreadHandler implements Observer, Runnable {
 
     @Override
     public void update(Observable o, Object arg) {
-        calls++;
         if (!evaluator.isFinished()) {
             evaluator.evaluateThreads();
             if (evaluator.isFinished()) {

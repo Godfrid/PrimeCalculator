@@ -16,7 +16,7 @@ public class TDThreadEvaluator {
         this.isPrime = true;
     }
 
-    public void evaluateThreads() {
+    public synchronized void evaluateThreads() {
 
         System.out.println("Eval started");
         if (isFinished) {

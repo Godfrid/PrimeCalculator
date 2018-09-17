@@ -35,18 +35,18 @@ public class TrialDivision extends Observable implements Runnable {
         this.Finish();
         //evaluate
     }
-
+// TODO: Not to run if all is finished with true.
     private void Finish() {
         if (!isFinished) {
             isFinished = true;
 /*            try {
-                sleep(100 + (long) (Math.random() * (400)));
+                sleep(300 + (long) (Math.random() * (400)));
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 e.printStackTrace();
             }*/
             setChanged();
-            notifyObservers(isFinished);
+            notifyObservers();
         }
     }
 
