@@ -10,7 +10,7 @@ import static java.lang.Thread.sleep;
 public class TDThreadHandler implements Observer, Runnable {
     private TrialDivision[] trialDivisions;
     private Thread[] trialDivisionThreads;
-    private TDThreadEvaluator evaluator;
+    private final TDThreadEvaluator evaluator;
 
     public TDThreadHandler(long number, int cores) {
         trialDivisions = TDCreator.create(number, cores);
@@ -49,11 +49,15 @@ public class TDThreadHandler implements Observer, Runnable {
     @Override
     public void update(Observable o, Object arg) {
         if (!evaluator.isFinished()) {
-            evaluator.evaluateThreads();
-            if (evaluator.isFinished()) {
-                kill();
-                System.out.println("Killing threads...");
-                System.out.println("FINISHED. Prime: " + evaluator.isPrime());
+            synchronized (evaluator) {
+                if (!evaluator.isFinished()) {
+                    evaluator.evaluateThreads();
+                    if (evaluator.isFinished()) {
+                        kill();
+                        System.out.println("Killing threads...");
+                        System.out.println("FINISHED. Prime: " + evaluator.isPrime());
+                    }
+                }
             }
         }
     }
