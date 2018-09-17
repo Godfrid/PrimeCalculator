@@ -1,4 +1,4 @@
-package logic.TDThreadHandler;
+package logic.plugin;
 
 public class SqrtIntervalDivider {
     private long[] thresholds;

@@ -9,6 +9,7 @@ public class MillerRabin {
     private boolean isPrime;
 
     private boolean millerRabinPass(BigInteger a, BigInteger n) {
+
         BigInteger nMinusOne = n.subtract(BigInteger.ONE);
 
         BigInteger d = nMinusOne;
@@ -26,23 +27,26 @@ public class MillerRabin {
             }
             aToPower = aToPower.multiply(aToPower).mod(n);
         }
-
         return aToPower.equals(nMinusOne);
     }
 
-    public void millerRabin(BigInteger n) {
+
+    public void test(BigInteger n) {
         for (int repeat = 0; repeat < 20; repeat++) {
+
             BigInteger a;
             do {
                 a = new BigInteger(n.bitLength(), new Random());
-            } while (a.equals(BigInteger.ZERO));
+            } while (a.equals(BigInteger.ZERO) || a.equals(n));
 
             if (!millerRabinPass(a, n)) {
                 isPrime = false;
+                isFinished = true;
                 return;
             }
         }
         isPrime = true;
+        isFinished = true;
     }
 
 

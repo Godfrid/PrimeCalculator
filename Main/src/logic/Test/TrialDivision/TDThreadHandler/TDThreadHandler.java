@@ -1,9 +1,11 @@
-package logic.TDThreadHandler;
+package logic.Test.TrialDivision.TDThreadHandler;
 
-import logic.Test.TrialDivision;
+import logic.Test.TrialDivision.TrialDivision;
 
 import java.util.Observable;
 import java.util.Observer;
+
+import static java.lang.Thread.sleep;
 
 public class TDThreadHandler implements Observer, Runnable {
     private TrialDivision[] trialDivisions;
@@ -37,15 +39,16 @@ public class TDThreadHandler implements Observer, Runnable {
 
     private void kill() {
         for (TrialDivision td: trialDivisions) {
-            System.out.println(td.isFinished());
             td.stop();
         }
     }
 
+ private long calls = 0;
 //TODO: IF threads finsih at the same time only one call.
 
     @Override
     public void update(Observable o, Object arg) {
+        calls++;
         if (!evaluator.isFinished()) {
             evaluator.evaluateThreads();
             if (evaluator.isFinished()) {

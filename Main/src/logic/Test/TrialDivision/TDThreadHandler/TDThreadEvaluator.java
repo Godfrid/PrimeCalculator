@@ -1,6 +1,6 @@
-package logic.TDThreadHandler;
+package logic.Test.TrialDivision.TDThreadHandler;
 
-import logic.Test.TrialDivision;
+import logic.Test.TrialDivision.TrialDivision;
 
 import static java.lang.Thread.sleep;
 
@@ -16,12 +16,14 @@ public class TDThreadEvaluator {
         this.isPrime = true;
     }
 
-    public synchronized void evaluateThreads() {
+    public void evaluateThreads() {
+
         System.out.println("Eval started");
         if (isFinished) {
             System.out.println("Eval ended short");
             return;
         }
+
         int i = 0;
 
         for (TrialDivision trialDivision: trialDivisions) {

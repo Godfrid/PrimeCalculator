@@ -1,5 +1,6 @@
-package logic.TDThreadHandler;
-import logic.Test.TrialDivision;
+package logic.Test.TrialDivision.TDThreadHandler;
+import logic.Test.TrialDivision.TrialDivision;
+import logic.plugin.SqrtIntervalDivider;
 
 public class TDCreator {
 

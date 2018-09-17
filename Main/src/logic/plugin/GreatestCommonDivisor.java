@@ -1,4 +1,4 @@
-package logic.GCD;
+package logic.plugin;
 
 import java.math.BigInteger;
 

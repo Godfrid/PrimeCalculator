@@ -1,7 +1,10 @@
-package logic.Test;
+package logic.Test.TrialDivision;
 
 
 import java.util.Observable;
+import java.util.Random;
+
+import static java.lang.Thread.sleep;
 
 public class TrialDivision extends Observable implements Runnable {
 
@@ -36,6 +39,12 @@ public class TrialDivision extends Observable implements Runnable {
     private void Finish() {
         if (!isFinished) {
             isFinished = true;
+/*            try {
+                sleep(100 + (long) (Math.random() * (400)));
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                e.printStackTrace();
+            }*/
             setChanged();
             notifyObservers(isFinished);
         }
