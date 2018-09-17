@@ -17,6 +17,7 @@ public class TDThreadEvaluator {
     }
 
     public synchronized void evaluateThreads() {
+        System.out.println("Eval thread: " + Thread.currentThread().getName());
 
         System.out.println("Eval started");
         if (isFinished) {

@@ -7,13 +7,17 @@ import java.util.Observer;
 
 import static java.lang.Thread.sleep;
 
-public class TDThreadHandler implements Observer, Runnable {
+public class TDThreadHandler implements Observer {
     private TrialDivision[] trialDivisions;
     private Thread[] trialDivisionThreads;
     private final TDThreadEvaluator evaluator;
 
     public TDThreadHandler(long number, int cores) {
-        trialDivisions = TDCreator.create(number, cores);
+        if (number < 10000) {
+            trialDivisions = TDCreator.create(number, 1);
+        } else {
+            trialDivisions = TDCreator.create(number, cores);
+        }
         trialDivisionThreads = new Thread[trialDivisions.length];
         evaluator = new TDThreadEvaluator(trialDivisions);
         int i = 0;
@@ -25,6 +29,7 @@ public class TDThreadHandler implements Observer, Runnable {
     }
 
     public void start() {
+
         for (Thread trialDivisionThread: trialDivisionThreads) {
             trialDivisionThread.start();
         }
@@ -49,7 +54,15 @@ public class TDThreadHandler implements Observer, Runnable {
     @Override
     public void update(Observable o, Object arg) {
         if (!evaluator.isFinished()) {
-            synchronized (evaluator) {
+            synchronized (this) {
+                System.out.println(Thread.currentThread().getName());
+                try {
+                    wait(50);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    e.printStackTrace();
+                }
+
                 if (!evaluator.isFinished()) {
                     evaluator.evaluateThreads();
                     if (evaluator.isFinished()) {
@@ -62,9 +75,4 @@ public class TDThreadHandler implements Observer, Runnable {
         }
     }
 
-// Might not need to be on a different path.
-    @Override
-    public void run() {
-        start();
-    }
 }

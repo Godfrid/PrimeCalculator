@@ -22,9 +22,18 @@ public class TrialDivision extends Observable implements Runnable {
     }
 
     public void test() {
+        if (number == 3 || number == 2) {
+            this.Finish();
+            return;
+        } else if (number % 2 == 0) {
+            isPrime = false;
+            this.Finish();
+            return;
+        }
+
         long divider = (startAt % 2 == 0) ? startAt + 1 : startAt;
         System.out.println(" num: " + number + " startAt: " + startAt + " endAt: " + endAt);
-        while (divider <= endAt & !isFinished) {
+        while (divider < endAt & !isFinished) {
             if (number % divider == 0) {
                 isPrime = false;
                 System.out.println("Divider: " + divider);
@@ -39,12 +48,12 @@ public class TrialDivision extends Observable implements Runnable {
     private void Finish() {
         if (!isFinished) {
             isFinished = true;
-/*            try {
-                sleep(300 + (long) (Math.random() * (400)));
+            try {
+                sleep(50);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 e.printStackTrace();
-            }*/
+            }
             setChanged();
             notifyObservers();
         }
