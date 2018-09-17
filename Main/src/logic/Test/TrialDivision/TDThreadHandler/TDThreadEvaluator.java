@@ -7,7 +7,7 @@ import static java.lang.Thread.sleep;
 public class TDThreadEvaluator {
 
     private TrialDivision[] trialDivisions;
-    private volatile boolean isFinished;
+    private boolean isFinished;
     private boolean isPrime;
 
     public TDThreadEvaluator(TrialDivision[] trialDivisions) {
@@ -16,7 +16,7 @@ public class TDThreadEvaluator {
         this.isPrime = true;
     }
 
-    public synchronized void evaluateThreads() {
+    public void evaluateThreads() {
         System.out.println("Eval thread: " + Thread.currentThread().getName());
 
         System.out.println("Eval started");

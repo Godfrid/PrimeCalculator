@@ -48,12 +48,6 @@ public class TrialDivision extends Observable implements Runnable {
     private void Finish() {
         if (!isFinished) {
             isFinished = true;
-            try {
-                sleep(50);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                e.printStackTrace();
-            }
             setChanged();
             notifyObservers();
         }

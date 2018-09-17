@@ -11,8 +11,10 @@ public class TDThreadHandler implements Observer {
     private TrialDivision[] trialDivisions;
     private Thread[] trialDivisionThreads;
     private final TDThreadEvaluator evaluator;
+    private volatile boolean isEvaluating;
 
     public TDThreadHandler(long number, int cores) {
+        isEvaluating = false;
         if (number < 10000) {
             trialDivisions = TDCreator.create(number, 1);
         } else {
@@ -48,29 +50,33 @@ public class TDThreadHandler implements Observer {
         }
     }
 
- private long calls = 0;
-//TODO: IF threads finsih at the same time only one call.
-
     @Override
     public void update(Observable o, Object arg) {
         if (!evaluator.isFinished()) {
             synchronized (this) {
-                System.out.println(Thread.currentThread().getName());
-                try {
-                    wait(50);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    e.printStackTrace();
+                while (isEvaluating) {
+                    try {
+                        wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        Thread.currentThread().interrupt();
+                    }
                 }
+                isEvaluating = true;
+                System.out.println("START EVAL PROCESS: " + Thread.currentThread().getName());
 
                 if (!evaluator.isFinished()) {
                     evaluator.evaluateThreads();
                     if (evaluator.isFinished()) {
+                        System.out.println("Calling kill: " + Thread.currentThread().getName());
                         kill();
+
                         System.out.println("Killing threads...");
                         System.out.println("FINISHED. Prime: " + evaluator.isPrime());
                     }
                 }
+                isEvaluating = false;
+                notifyAll();
             }
         }
     }
