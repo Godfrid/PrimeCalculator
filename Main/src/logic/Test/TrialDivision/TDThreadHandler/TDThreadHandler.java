@@ -12,8 +12,11 @@ public class TDThreadHandler implements Observer {
     private Thread[] trialDivisionThreads;
     private final TDThreadEvaluator evaluator;
     private volatile boolean isEvaluating;
+    private boolean isFinished;
+    private boolean isPrime;
 
     public TDThreadHandler(long number, int cores) {
+        isFinished = false;
         isEvaluating = false;
         if (number < 10000) {
             trialDivisions = TDCreator.create(number, 1);
@@ -40,6 +43,7 @@ public class TDThreadHandler implements Observer {
                 trialDivisionThread.join();
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                Thread.currentThread().interrupt();
             }
         }
     }
@@ -48,6 +52,8 @@ public class TDThreadHandler implements Observer {
         for (TrialDivision td: trialDivisions) {
             td.stop();
         }
+        isFinished = true;
+        isPrime = evaluator.isPrime();
     }
 
     @Override
@@ -81,4 +87,11 @@ public class TDThreadHandler implements Observer {
         }
     }
 
+    public boolean isFinished() {
+        return isFinished;
+    }
+
+    public boolean isPrime() {
+        return isPrime;
+    }
 }
