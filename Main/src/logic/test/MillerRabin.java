@@ -1,4 +1,4 @@
-package logic.Test;
+package logic.test;
 
 import java.math.BigInteger;
 import java.util.Random;

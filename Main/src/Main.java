@@ -1,13 +1,10 @@
-import logic.Test.MillerRabin;
-import logic.Test.TrialDivision.TDThreadHandler.TDThreadHandler;
-
-import java.math.BigInteger;
+import logic.test.TrialDivision.TDThreadHandler.TDThreadHandler;
 
 import static java.lang.Thread.sleep;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException {
-// Test nums: not prime: 8545321313331233313L,
+// test nums: not prime: 8545321313331233313L,
 // prime: 8223331132123323353L, 3240987423698742331L, 948895995818594437L, "2074722246773485207821695222107608587480996474721117292752992589912196684750549658310084416732550077"
 
         /*        EventQueue.invokeLater(() -> {

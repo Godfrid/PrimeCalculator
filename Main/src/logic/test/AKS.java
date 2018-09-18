@@ -1,8 +1,8 @@
-package logic.Test;
+package logic.test;
 
 
 import java.math.*;
-import java.io.*;
+
 /***************************************************************************
  * Team
  **************

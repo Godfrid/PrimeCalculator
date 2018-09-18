@@ -1,8 +1,7 @@
-package logic.Test.TrialDivision;
+package logic.test.TrialDivision;
 
 
 import java.util.Observable;
-import java.util.Random;
 
 import static java.lang.Thread.sleep;
 

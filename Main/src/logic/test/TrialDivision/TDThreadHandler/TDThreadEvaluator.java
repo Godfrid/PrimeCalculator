@@ -1,6 +1,6 @@
-package logic.Test.TrialDivision.TDThreadHandler;
+package logic.test.TrialDivision.TDThreadHandler;
 
-import logic.Test.TrialDivision.TrialDivision;
+import logic.test.TrialDivision.TrialDivision;
 
 import static java.lang.Thread.sleep;
 
