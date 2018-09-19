@@ -1,5 +1,6 @@
 package ui;
 
+import logic.test.AKS;
 import logic.test.MillerRabin;
 import logic.test.TrialDivision.TDThreadHandler.TDThreadHandler;
 
@@ -11,15 +12,16 @@ import java.math.BigInteger;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static java.awt.Color.*;
+import static java.lang.Thread.currentThread;
 import static java.lang.Thread.sleep;
 
 public class Ui implements UIEventManager{
     private final Font inputFont = new Font(Font.SANS_SERIF, Font.BOLD, 13);
-    private final Font buttonFont = new Font(Font.SANS_SERIF, Font.BOLD, 16);
+    private final Font buttonFont = new Font(Font.SANS_SERIF, Font.BOLD, 14);
     private long runTime = 0;
     public AtomicBoolean buttonIsEnabled = new AtomicBoolean(true);
 
-    private JFrame primeTesterUI;
+    public JFrame primeTesterUI;
     private JPanel mainPanel;
 
     private JLabel inputLabel;
@@ -63,7 +65,7 @@ public class Ui implements UIEventManager{
         mainPanel.add(inputLabel);
 
         inputTextField = new JTextField();
-        inputTextField.setBounds(115, 20, 600, 20);
+        inputTextField.setBounds(120, 20, 600, 20);
         inputTextField.setBackground(Color.lightGray);
         inputTextField.setOpaque(true);
         inputTextField.setFont(inputFont);
@@ -78,7 +80,7 @@ public class Ui implements UIEventManager{
 
         engineSelector = new JComboBox(TEST_TYPES);
         engineSelector.setSelectedIndex(1);
-        engineSelector.setBounds(115, 50, 120, 20);
+        engineSelector.setBounds(120, 50, 120, 20);
         engineSelector.setOpaque(true);
         engineSelector.setFont(inputFont);
         engineSelector.setBackground(Color.lightGray);
@@ -157,20 +159,22 @@ public class Ui implements UIEventManager{
 
     @Override
     public void onStart() {
-        synchronized (this) {
+        //TODO: Solve responsiveness/button problem.
+        startButton.setEnabled(false);
+        System.out.println("onStart beginn thread: " + currentThread().getName());
+
             // Init:
-            startButton.setEnabled(false);
             BigInteger n = new BigInteger(inputTextField.getText());
             int engine = engineSelector.getSelectedIndex();
-/*            primeTesterUI.revalidate();
-            primeTesterUI.repaint();*/
+
             // Test start:
             if (engine == 0) {
                 TDThreadHandler tester = new TDThreadHandler(n.longValue(), 0);
                 runTime = System.currentTimeMillis();
                 tester.start();
-
+                // never runs into this
                 while (!tester.isFinished()) {
+                    System.out.println("This runs in test:" + Thread.currentThread().getName());
                 }
 
                 if (tester.isPrime()) {
@@ -199,11 +203,45 @@ public class Ui implements UIEventManager{
                 }
             }
 
+            if (engine == 2) {
+                TDThreadHandler tester = new TDThreadHandler(n.longValue(), coreSelector.getSelectedIndex() + 1);
+                runTime = System.currentTimeMillis();
+                tester.start();
+
+                while (!tester.isFinished()) {
+                }
+
+                if (tester.isPrime()) {
+                    isPrime.setBackground(Color.green);
+                    isPrime.setText("IS A PRIME");
+                } else {
+                    isPrime.setBackground(Color.red);
+                    isPrime.setText("NOT A PRIME");
+                }
+            }
+
+            if (engine == 3) {
+                runTime = System.currentTimeMillis();
+                AKS tester = new AKS(n);
+
+                while (!tester.isFinished()) {
+                }
+
+                if (tester.isPrime()) {
+                    isPrime.setBackground(Color.green);
+                    isPrime.setText("IS A PRIME");
+                } else {
+                    isPrime.setBackground(Color.red);
+                    isPrime.setText("NOT A PRIME");
+                }
+            }
+
+            System.out.println("This FINISHIS:" + Thread.currentThread().getName());
             // On finish:
             runTime = System.currentTimeMillis() - runTime;
             runTimeField.setText(runTime + " ms");
             startButton.setEnabled(true);
-        }
+
     }
 
     @Override

@@ -36,10 +36,13 @@ import java.math.*;
  *      e. return PRIME
  */
 
+
 public class AKS {
     private int log;
     private boolean sieveArray[];
     private int SIEVE_ERATOS_SIZE = 100000000;
+    private boolean isPrime;
+    private boolean isFinished;
 
     /* function that computes the log of a big number*/
     public double logBigNum(BigInteger bNum) {
@@ -209,10 +212,12 @@ public class AKS {
         boolean result = checkIsPrime(input);
 
         if(result) {
-            System.out.println("1");
+            isPrime = true;
+            isFinished = true;
         }
         else {
-            System.out.println("0");
+            isPrime = false;
+            isFinished = true;
         }
     }
 
@@ -259,5 +264,13 @@ public class AKS {
             if(leftH.compareTo(rightH) != 0) return false;
         }
         return true;
+    }
+
+    public boolean isPrime() {
+        return isPrime;
+    }
+
+    public boolean isFinished() {
+        return isFinished;
     }
 }
