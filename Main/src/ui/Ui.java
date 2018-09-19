@@ -174,11 +174,13 @@ public class Ui implements UIEventManager{
 
     @Override
     public void onStart() {
-        //TODO: Solve responsiveness/button problem.
-        startButton.setEnabled(false);
-        primeTesterUI.revalidate();
-        primeTesterUI.repaint();
-        System.out.println("onStart beginn thread: " + currentThread().getName());
+        //TODO: UI Repainter or methode caller thread is needed. For some actions the UI have to wait for a result, joins are needed for sync.
+        EventQueue.invokeLater(() -> {
+
+            startButton.setEnabled(false);
+            primeTesterUI.revalidate();
+            primeTesterUI.repaint();
+            System.out.println("UI onStart begin thread: " + currentThread().getName());
 
             // Init:
             BigInteger n = new BigInteger(inputTextField.getText());
@@ -188,11 +190,12 @@ public class Ui implements UIEventManager{
             if (engine == 0) {
                 TDThreadHandler tester = new TDThreadHandler(n.longValue(), 0);
                 runTime = System.currentTimeMillis();
+                System.out.println("UI This runs in test:" + Thread.currentThread().getName());
                 tester.start();
-                // never runs into this
-                while (!tester.isFinished()) {
-                    System.out.println("This runs in test:" + Thread.currentThread().getName());
-                }
+                // never runs into this if joined, but wont have time to repaint either.?
+/*            while (!tester.isFinished()) {
+            System.out.println("UI This runs in test while:" + Thread.currentThread().getName());
+        }*/
 
                 if (tester.isPrime()) {
                     isPrime.setBackground(Color.green);
@@ -253,11 +256,15 @@ public class Ui implements UIEventManager{
                 }
             }
 
-            System.out.println("This FINISHIS:" + Thread.currentThread().getName());
+            System.out.println("UI This FINISHES:" + Thread.currentThread().getName());
             // On finish:
             runTime = System.currentTimeMillis() - runTime;
             runTimeField.setText(runTime + " ms");
             startButton.setEnabled(true);
+
+
+        });
+
 
     }
 

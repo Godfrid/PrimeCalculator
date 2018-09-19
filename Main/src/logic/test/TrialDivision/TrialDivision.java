@@ -21,6 +21,7 @@ public class TrialDivision extends Observable implements Runnable {
     }
 
     public void test() {
+        System.out.println("This runs a trial division test:" + Thread.currentThread().getName());
         if (number == 3 || number == 2) {
             this.Finish();
             return;
@@ -31,11 +32,10 @@ public class TrialDivision extends Observable implements Runnable {
         }
 
         long divider = (startAt % 2 == 0) ? startAt + 1 : startAt;
-        System.out.println(" num: " + number + " startAt: " + startAt + " endAt: " + endAt);
+        System.out.println(" ---num: " + number + " startAt: " + startAt + " endAt: " + endAt);
         while (divider < endAt & !isFinished) {
             if (number % divider == 0) {
                 isPrime = false;
-                System.out.println("Divider: " + divider);
                 break;
             }
             divider += 2;
@@ -43,7 +43,7 @@ public class TrialDivision extends Observable implements Runnable {
         this.Finish();
         //evaluate
     }
-// TODO: Not to run if all is finished with true.
+
     private void Finish() {
         if (!isFinished) {
             isFinished = true;

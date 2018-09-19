@@ -35,17 +35,19 @@ public class TDThreadHandler implements Observer {
 
     public void start() {
 
+        System.out.println("This starts the threadhandler.start:" + Thread.currentThread().getName());
         for (Thread trialDivisionThread: trialDivisionThreads) {
             trialDivisionThread.start();
         }
-        for (Thread trialDivisionThread: trialDivisionThreads) {
+
+/*        for (Thread trialDivisionThread: trialDivisionThreads) {
             try {
                 trialDivisionThread.join();
             } catch (InterruptedException e) {
                 e.printStackTrace();
-                Thread.currentThread().interrupt();
             }
-        }
+        }*/
+
     }
 
     private void kill() {
