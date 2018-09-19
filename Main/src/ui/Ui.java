@@ -14,12 +14,18 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static java.awt.Color.*;
 import static java.lang.Thread.currentThread;
 import static java.lang.Thread.sleep;
-
+// runnable?
 public class Ui implements UIEventManager{
+
     private final Font inputFont = new Font(Font.SANS_SERIF, Font.BOLD, 13);
     private final Font buttonFont = new Font(Font.SANS_SERIF, Font.BOLD, 14);
+    private Color backItem;
+    private Color foreItem;
     private long runTime = 0;
     public AtomicBoolean buttonIsEnabled = new AtomicBoolean(true);
+    private boolean lightScheme = true;
+
+
 
     public JFrame primeTesterUI;
     private JPanel mainPanel;
@@ -43,9 +49,18 @@ public class Ui implements UIEventManager{
     // private JLabel LOG
 
     private JButton startButton;
+
     // private JButton stopButton;
 
     public Ui() {
+        if (lightScheme) {
+            backItem = Color.lightGray;
+            foreItem = Color.white;
+        } else {
+            backItem = Color.darkGray;
+            foreItem = Color.lightGray;
+        }
+
         primeTesterUI = new JFrame();
         primeTesterUI.setSize(800, 600);
         primeTesterUI.setLocationRelativeTo(null);
@@ -55,7 +70,7 @@ public class Ui implements UIEventManager{
 
         mainPanel = new JPanel();
         mainPanel.setLayout(null);
-        mainPanel.setBackground(Color.darkGray);
+        mainPanel.setBackground(backItem);
         primeTesterUI.add(mainPanel);
 
         inputLabel = new JLabel("Number:");
@@ -66,7 +81,7 @@ public class Ui implements UIEventManager{
 
         inputTextField = new JTextField();
         inputTextField.setBounds(120, 20, 600, 20);
-        inputTextField.setBackground(Color.lightGray);
+        inputTextField.setBackground(foreItem);
         inputTextField.setOpaque(true);
         inputTextField.setFont(inputFont);
         inputTextField.setBorder(null);
@@ -83,7 +98,7 @@ public class Ui implements UIEventManager{
         engineSelector.setBounds(120, 50, 120, 20);
         engineSelector.setOpaque(true);
         engineSelector.setFont(inputFont);
-        engineSelector.setBackground(Color.lightGray);
+        engineSelector.setBackground(foreItem);
         engineSelector.setForeground(Color.black);
         engineSelector.addActionListener(e -> {
             onTDSelect();
@@ -101,7 +116,7 @@ public class Ui implements UIEventManager{
         coreSelector.setBounds(385, 50, 40, 20);
         coreSelector.setVisible(false);
         coreSelector.setFont(inputFont);
-        coreSelector.setBackground(Color.lightGray);
+        coreSelector.setBackground(foreItem);
         coreSelector.setForeground(Color.black);
         mainPanel.add(coreSelector);
 
@@ -110,7 +125,7 @@ public class Ui implements UIEventManager{
         isPrime.setFont(buttonFont);
         isPrime.setHorizontalAlignment(SwingConstants.CENTER);
         isPrime.setVerticalAlignment(SwingConstants.CENTER);
-        isPrime.setBackground(Color.lightGray);
+        isPrime.setBackground(foreItem);
         isPrime.setForeground(Color.black);
         isPrime.setOpaque(true);
         mainPanel.add(isPrime);
@@ -136,7 +151,7 @@ public class Ui implements UIEventManager{
         startButton.setEnabled(true);
         startButton.setHorizontalAlignment(SwingConstants.CENTER);
         startButton.setVerticalAlignment(SwingConstants.CENTER);
-        startButton.setBackground(lightGray);
+        startButton.setBackground(foreItem);
         startButton.setForeground(black);
         startButton.addActionListener(e -> {
             onStart();
@@ -161,6 +176,8 @@ public class Ui implements UIEventManager{
     public void onStart() {
         //TODO: Solve responsiveness/button problem.
         startButton.setEnabled(false);
+        primeTesterUI.revalidate();
+        primeTesterUI.repaint();
         System.out.println("onStart beginn thread: " + currentThread().getName());
 
             // Init:
