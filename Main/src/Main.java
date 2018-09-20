@@ -1,9 +1,10 @@
-import logic.test.TrialDivision.TDThreadHandler.TDThreadHandler;
-
-import static java.lang.Thread.sleep;
+import ui.UI;
+import java.awt.*;
 
 public class Main {
     public static void main(String[] args) {
-
+        EventQueue.invokeLater(() -> {
+            UI ui = new UI();
+        });
     }
 }

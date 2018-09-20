@@ -17,11 +17,7 @@ public class TDThreadEvaluator {
     }
 
     public void evaluateThreads() {
-        System.out.println("Eval thread: " + Thread.currentThread().getName());
-
-        System.out.println("Eval started");
         if (isFinished) {
-            System.out.println("Eval ended short");
             return;
         }
 
@@ -39,8 +35,6 @@ public class TDThreadEvaluator {
                 }
             }
         }
-
-    System.out.println("Eval ended");
     }
 
     public boolean isFinished() {

@@ -15,10 +15,11 @@ import static java.awt.Color.*;
 import static java.lang.Thread.currentThread;
 import static java.lang.Thread.sleep;
 // runnable?
-public class Ui implements UIEventManager{
+public class UI implements UIEventManager{
 
     private final Font inputFont = new Font(Font.SANS_SERIF, Font.BOLD, 13);
     private final Font buttonFont = new Font(Font.SANS_SERIF, Font.BOLD, 14);
+    final BigInteger longMax = new BigInteger("9223372036854775807");
     private Color backItem;
     private Color foreItem;
     private long runTime = 0;
@@ -48,7 +49,7 @@ public class Ui implements UIEventManager{
 
     // private JButton stopButton;
 
-    public Ui() {
+    public UI() {
         if (lightScheme) {
             backItem = Color.lightGray;
             foreItem = Color.white;
@@ -81,7 +82,7 @@ public class Ui implements UIEventManager{
         inputTextField.setOpaque(true);
         inputTextField.setFont(inputFont);
         inputTextField.setBorder(null);
-        inputTextField.setText("8223331132123323353");
+        inputTextField.setText("9223372036854775783");
 /*        inputTextField.addPropertyChangeListener(new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
@@ -178,29 +179,26 @@ public class Ui implements UIEventManager{
 
     @Override
     public void onStart() {
-        //TODO: UI Repainter or methode caller thread is needed. For some actions the UI have to wait for a result, joins are needed for sync.
         // Init:
         disableButton();
         BigInteger n = new BigInteger(inputTextField.getText());
         Enum testType = TestType.values()[engineSelector.getSelectedIndex()];
-/*        primeTesterUI.repaint();
-        primeTesterUI.revalidate();*/
+
         // Test test:
         EventQueue.invokeLater(() ->{
-
             if (testType == TestType.TRIAL_DIVISION) {
-                if (0 > n.compareTo(new BigInteger("9223372036854775807"))) {
+                if (0 > n.compareTo(longMax)) {
                     startTest(new TDThreadHandler(n.longValue(), 0));
                 }
+                //TODO: Handle longer than long input.
             }
 
             if (testType == TestType.MILLER_RABIN) {
                 startTest(new MillerRabin(n));
-
             }
 
             if (testType == TestType.CUSTOM) {
-                if (0 > n.compareTo(new BigInteger("9223372036854775807"))) {
+                if (0 > n.compareTo(longMax)) {
                     startTest(new TDThreadHandler(n.longValue(), coreSelector.getSelectedIndex() + 1));
                 }
             }
@@ -214,13 +212,9 @@ public class Ui implements UIEventManager{
 
     private void disableButton() {
             startButton.setEnabled(false);
-            primeTesterUI.revalidate();
-            primeTesterUI.repaint();
-            System.out.println("UI onStart begin thread: " + currentThread().getName());
     }
 
     private void enableButton() {
-            System.out.println("UI This FINISHES:" + Thread.currentThread().getName());
             startButton.setEnabled(true);
     }
 
@@ -241,16 +235,5 @@ public class Ui implements UIEventManager{
         tester.test();
         showResult(tester);
         enableButton();
-    }
-
-
-    @Override
-    public void reset() {
-
-    }
-
-    @Override
-    public void stop() {
-
     }
 }

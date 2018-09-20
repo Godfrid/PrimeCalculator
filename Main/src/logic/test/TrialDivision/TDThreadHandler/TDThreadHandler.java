@@ -2,7 +2,6 @@ package logic.test.TrialDivision.TDThreadHandler;
 
 import logic.test.Test;
 import logic.test.TrialDivision.TrialDivision;
-import ui.Ui;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -18,6 +17,7 @@ public class TDThreadHandler implements Observer, Test {
     private boolean isPrime;
 
     public TDThreadHandler(long number, int cores) {
+
         isFinished = false;
         isEvaluating = false;
         if (number < 10000) {
@@ -37,7 +37,6 @@ public class TDThreadHandler implements Observer, Test {
 
     public void test() {
 
-        System.out.println("This starts the threadhandler.test:" + Thread.currentThread().getName());
         for (Thread trialDivisionThread: trialDivisionThreads) {
             trialDivisionThread.start();
         }
@@ -54,12 +53,13 @@ public class TDThreadHandler implements Observer, Test {
     }
 
     private void kill() {
-/*        for (TrialDivision td: trialDivisions) {
-            td.stop();
-        }*/
+
         isFinished = true;
         isPrime = evaluator.isPrime();
-        notifyAll();
+        /*notifyAll();*/
+        for (TrialDivision td: trialDivisions) {
+            td.stop();
+        }
     }
 
     @Override
@@ -82,7 +82,6 @@ public class TDThreadHandler implements Observer, Test {
                     if (evaluator.isFinished()) {
                         System.out.println("Calling kill: " + Thread.currentThread().getName());
                         kill();
-                        System.out.println("Killing threads...");
                         System.out.println("FINISHED. Prime: " + evaluator.isPrime());
                     }
                 }
