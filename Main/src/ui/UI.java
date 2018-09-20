@@ -7,7 +7,11 @@ import logic.test.Test;
 import logic.test.TrialDivision.TDThreadHandler.TDThreadHandler;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigInteger;
 
@@ -17,8 +21,8 @@ import static java.lang.Thread.sleep;
 // runnable?
 public class UI implements UIEventManager{
 
-    private final Font inputFont = new Font(Font.SANS_SERIF, Font.BOLD, 13);
-    private final Font buttonFont = new Font(Font.SANS_SERIF, Font.BOLD, 14);
+    private final Font inputFont = new Font(Font.SANS_SERIF, Font.BOLD, 22);
+    private final Font buttonFont = new Font(Font.SANS_SERIF, Font.BOLD, 22);
     final BigInteger longMax = new BigInteger("9223372036854775807");
     private Color backItem;
     private Color foreItem;
@@ -59,7 +63,7 @@ public class UI implements UIEventManager{
         }
 
         primeTesterUI = new JFrame();
-        primeTesterUI.setSize(800, 600);
+        primeTesterUI.setSize(750, 400);
         primeTesterUI.setLocationRelativeTo(null);
         primeTesterUI.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         primeTesterUI.setResizable(false);
@@ -71,62 +75,73 @@ public class UI implements UIEventManager{
         primeTesterUI.add(mainPanel);
 
         inputLabel = new JLabel("Number:");
-        inputLabel.setBounds(20, 20, 90, 20);
+        inputLabel.setBounds(20, 20, 120, 40);
         inputLabel.setForeground(Color.black);
         inputLabel.setFont(buttonFont);
+        inputLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        inputLabel.setVerticalAlignment(SwingConstants.CENTER);
         mainPanel.add(inputLabel);
 
         inputTextField = new JTextField();
-        inputTextField.setBounds(120, 20, 600, 20);
+        inputTextField.setBounds(180, 20, 470, 40);
         inputTextField.setBackground(foreItem);
+        inputTextField.setForeground(black);
         inputTextField.setOpaque(true);
         inputTextField.setFont(inputFont);
         inputTextField.setBorder(null);
         inputTextField.setText("9223372036854775783");
-/*        inputTextField.addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                isPrime.setText("RESULT");
-                isPrime.setBackground(foreItem);
+        inputTextField.getDocument().addDocumentListener(new DocumentListener() {
+            public void changedUpdate(DocumentEvent e) {
+                isPrimeReset();
             }
-        });*/
+            public void removeUpdate(DocumentEvent e) {
+                isPrimeReset();
+            }
+            public void insertUpdate(DocumentEvent e) {
+                isPrimeReset();
+            }
+        });
         mainPanel.add(inputTextField);
 
         testType = new JLabel("Test type:");
-        testType.setBounds(20, 50, 90, 20);
+        testType.setBounds(20, 100, 120, 40);
+        testType.setHorizontalAlignment(SwingConstants.CENTER);
+        testType.setVerticalAlignment(SwingConstants.CENTER);
         testType.setForeground(Color.black);
         testType.setFont(buttonFont);
         mainPanel.add(testType);
 
         engineSelector = new JComboBox(TestType.values());
         engineSelector.setSelectedIndex(0);
-        engineSelector.setBounds(120, 50, 120, 20);
+        engineSelector.setBounds(180, 100, 200, 40);
         engineSelector.setOpaque(true);
         engineSelector.setFont(inputFont);
         engineSelector.setBackground(foreItem);
         engineSelector.setForeground(Color.black);
         engineSelector.addActionListener(e -> {
+            isPrimeReset();
             onTDSelect();
         });
         mainPanel.add(engineSelector);
 
         numOfCores = new JLabel("# of Threads:");
-        numOfCores.setBounds(260, 50, 120, 20);
+        numOfCores.setBounds(450, 100, 180, 40);
         numOfCores.setFont(buttonFont);
         numOfCores.setVisible(false);
         numOfCores.setForeground(black);
         mainPanel.add(numOfCores);
 
         coreSelector = new JComboBox(NUMBER_OF_CORES);
-        coreSelector.setBounds(385, 50, 40, 20);
+        coreSelector.setBounds(620, 100, 60, 40);
         coreSelector.setVisible(false);
         coreSelector.setFont(inputFont);
         coreSelector.setBackground(foreItem);
         coreSelector.setForeground(Color.black);
+        coreSelector.addActionListener(e -> isPrimeReset());
         mainPanel.add(coreSelector);
 
         isPrime = new JLabel("RESULT");
-        isPrime.setBounds(20, 100, 120, 20);
+        isPrime.setBounds(20, 180, 200, 40);
         isPrime.setFont(buttonFont);
         isPrime.setHorizontalAlignment(SwingConstants.CENTER);
         isPrime.setVerticalAlignment(SwingConstants.CENTER);
@@ -136,22 +151,20 @@ public class UI implements UIEventManager{
         mainPanel.add(isPrime);
 
         runTimeLabel = new JLabel("Runtime:");
-        runTimeLabel.setBounds(150, 100, 80, 20);
+        runTimeLabel.setBounds(260, 180, 120, 40);
         runTimeLabel.setFont(buttonFont);
         runTimeLabel.setForeground(Color.black);
         mainPanel.add(runTimeLabel);
 
         runTimeField = new JLabel(runTime + " ms");
-        runTimeField.setBounds(235, 100, 100, 20);
+        runTimeField.setBounds(400, 180, 200, 40);
         runTimeField.setForeground(Color.black);
         runTimeField.setFont(buttonFont);
         runTimeField.setHorizontalAlignment(SwingConstants.LEFT);
         mainPanel.add(runTimeField);
 
-        //
-
         startButton = new JButton("TEST");
-        startButton.setBounds(20, 500, 80, 40);
+        startButton.setBounds(20, 250, 160, 60);
         startButton.setFont(buttonFont);
         startButton.setEnabled(true);
         startButton.setHorizontalAlignment(SwingConstants.CENTER);
@@ -181,6 +194,7 @@ public class UI implements UIEventManager{
     public void onStart() {
         // Init:
         disableButton();
+        isPrimeReset();
         BigInteger n = new BigInteger(inputTextField.getText());
         Enum testType = TestType.values()[engineSelector.getSelectedIndex()];
 
@@ -235,5 +249,12 @@ public class UI implements UIEventManager{
         tester.test();
         showResult(tester);
         enableButton();
+    }
+
+    private void isPrimeReset() {
+        isPrime.setBackground(foreItem);
+        isPrime.setText("RESULT");
+        runTime = 0;
+        runTimeField.setText(runTime + " ms");
     }
 }
