@@ -3,7 +3,7 @@ package logic.test;
 import java.math.BigInteger;
 import java.util.Random;
 
-public class MillerRabin {
+public class MillerRabin implements Test {
 
     private boolean isFinished;
     private boolean isPrime;

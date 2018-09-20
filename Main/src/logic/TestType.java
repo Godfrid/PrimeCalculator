@@ -1,5 +1,9 @@
 package logic;
 
+
+import logic.test.Test;
+import logic.test.TrialDivision.TDThreadHandler.TDThreadHandler;
+
 public enum TestType {
     TRIAL_DIVISION("Trial division"),
     MILLER_RABIN("Miller-Rabin"),
@@ -10,7 +14,6 @@ public enum TestType {
 
     private TestType(String name) {
         this.name = name;
-
     }
 
 

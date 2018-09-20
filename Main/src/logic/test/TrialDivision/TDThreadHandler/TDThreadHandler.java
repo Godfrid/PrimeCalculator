@@ -1,13 +1,15 @@
 package logic.test.TrialDivision.TDThreadHandler;
 
+import logic.test.Test;
 import logic.test.TrialDivision.TrialDivision;
+import ui.Ui;
 
 import java.util.Observable;
 import java.util.Observer;
 
 import static java.lang.Thread.sleep;
 
-public class TDThreadHandler implements Observer {
+public class TDThreadHandler implements Observer, Test {
     private TrialDivision[] trialDivisions;
     private Thread[] trialDivisionThreads;
     private final TDThreadEvaluator evaluator;
@@ -33,29 +35,31 @@ public class TDThreadHandler implements Observer {
         }
     }
 
-    public void start() {
+    public void test() {
 
-        System.out.println("This starts the threadhandler.start:" + Thread.currentThread().getName());
+        System.out.println("This starts the threadhandler.test:" + Thread.currentThread().getName());
         for (Thread trialDivisionThread: trialDivisionThreads) {
             trialDivisionThread.start();
         }
 
-/*        for (Thread trialDivisionThread: trialDivisionThreads) {
+        for (Thread trialDivisionThread: trialDivisionThreads) {
             try {
                 trialDivisionThread.join();
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                Thread.currentThread().interrupt();
             }
-        }*/
+        }
 
     }
 
     private void kill() {
-        for (TrialDivision td: trialDivisions) {
+/*        for (TrialDivision td: trialDivisions) {
             td.stop();
-        }
+        }*/
         isFinished = true;
         isPrime = evaluator.isPrime();
+        notifyAll();
     }
 
     @Override
@@ -78,7 +82,6 @@ public class TDThreadHandler implements Observer {
                     if (evaluator.isFinished()) {
                         System.out.println("Calling kill: " + Thread.currentThread().getName());
                         kill();
-
                         System.out.println("Killing threads...");
                         System.out.println("FINISHED. Prime: " + evaluator.isPrime());
                     }

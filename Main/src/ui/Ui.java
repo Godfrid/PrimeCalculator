@@ -1,15 +1,15 @@
 package ui;
 
+import logic.TestType;
 import logic.test.AKS;
 import logic.test.MillerRabin;
+import logic.test.Test;
 import logic.test.TrialDivision.TDThreadHandler.TDThreadHandler;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigInteger;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static java.awt.Color.*;
 import static java.lang.Thread.currentThread;
@@ -22,10 +22,7 @@ public class Ui implements UIEventManager{
     private Color backItem;
     private Color foreItem;
     private long runTime = 0;
-    public AtomicBoolean buttonIsEnabled = new AtomicBoolean(true);
     private boolean lightScheme = true;
-
-
 
     public JFrame primeTesterUI;
     private JPanel mainPanel;
@@ -35,7 +32,6 @@ public class Ui implements UIEventManager{
 
     private JLabel testType;
     private JComboBox engineSelector;
-    private final String[] TEST_TYPES = {"Trial division", "Miller-Rabin", "Costume TD", "AKS"};
 
     private JLabel numOfCores;
     private JComboBox coreSelector;
@@ -85,6 +81,14 @@ public class Ui implements UIEventManager{
         inputTextField.setOpaque(true);
         inputTextField.setFont(inputFont);
         inputTextField.setBorder(null);
+        inputTextField.setText("8223331132123323353");
+/*        inputTextField.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                isPrime.setText("RESULT");
+                isPrime.setBackground(foreItem);
+            }
+        });*/
         mainPanel.add(inputTextField);
 
         testType = new JLabel("Test type:");
@@ -93,8 +97,8 @@ public class Ui implements UIEventManager{
         testType.setFont(buttonFont);
         mainPanel.add(testType);
 
-        engineSelector = new JComboBox(TEST_TYPES);
-        engineSelector.setSelectedIndex(1);
+        engineSelector = new JComboBox(TestType.values());
+        engineSelector.setSelectedIndex(0);
         engineSelector.setBounds(120, 50, 120, 20);
         engineSelector.setOpaque(true);
         engineSelector.setFont(inputFont);
@@ -175,98 +179,70 @@ public class Ui implements UIEventManager{
     @Override
     public void onStart() {
         //TODO: UI Repainter or methode caller thread is needed. For some actions the UI have to wait for a result, joins are needed for sync.
-        EventQueue.invokeLater(() -> {
+        // Init:
+        disableButton();
+        BigInteger n = new BigInteger(inputTextField.getText());
+        Enum testType = TestType.values()[engineSelector.getSelectedIndex()];
+/*        primeTesterUI.repaint();
+        primeTesterUI.revalidate();*/
+        // Test test:
+        EventQueue.invokeLater(() ->{
 
+            if (testType == TestType.TRIAL_DIVISION) {
+                if (0 > n.compareTo(new BigInteger("9223372036854775807"))) {
+                    startTest(new TDThreadHandler(n.longValue(), 0));
+                }
+            }
+
+            if (testType == TestType.MILLER_RABIN) {
+                startTest(new MillerRabin(n));
+
+            }
+
+            if (testType == TestType.CUSTOM) {
+                if (0 > n.compareTo(new BigInteger("9223372036854775807"))) {
+                    startTest(new TDThreadHandler(n.longValue(), coreSelector.getSelectedIndex() + 1));
+                }
+            }
+
+            if (testType == TestType.AKS) {
+                startTest(new AKS(n));
+            }
+        });
+
+    }
+
+    private void disableButton() {
             startButton.setEnabled(false);
             primeTesterUI.revalidate();
             primeTesterUI.repaint();
             System.out.println("UI onStart begin thread: " + currentThread().getName());
-
-            // Init:
-            BigInteger n = new BigInteger(inputTextField.getText());
-            int engine = engineSelector.getSelectedIndex();
-
-            // Test start:
-            if (engine == 0) {
-                TDThreadHandler tester = new TDThreadHandler(n.longValue(), 0);
-                runTime = System.currentTimeMillis();
-                System.out.println("UI This runs in test:" + Thread.currentThread().getName());
-                tester.start();
-                // never runs into this if joined, but wont have time to repaint either.?
-/*            while (!tester.isFinished()) {
-            System.out.println("UI This runs in test while:" + Thread.currentThread().getName());
-        }*/
-
-                if (tester.isPrime()) {
-                    isPrime.setBackground(Color.green);
-                    isPrime.setText("IS A PRIME");
-                } else {
-                    isPrime.setBackground(Color.red);
-                    isPrime.setText("NOT A PRIME");
-                }
-            }
-
-            if (engine == 1) {
-                MillerRabin tester = new MillerRabin(n);
-                runTime = System.currentTimeMillis();
-                tester.test();
-
-                while (!tester.isFinished()) {
-                }
-
-                if (tester.isPrime()) {
-                    isPrime.setBackground(Color.green);
-                    isPrime.setText("IS A PRIME");
-                } else {
-                    isPrime.setBackground(Color.red);
-                    isPrime.setText("NOT A PRIME");
-                }
-            }
-
-            if (engine == 2) {
-                TDThreadHandler tester = new TDThreadHandler(n.longValue(), coreSelector.getSelectedIndex() + 1);
-                runTime = System.currentTimeMillis();
-                tester.start();
-
-                while (!tester.isFinished()) {
-                }
-
-                if (tester.isPrime()) {
-                    isPrime.setBackground(Color.green);
-                    isPrime.setText("IS A PRIME");
-                } else {
-                    isPrime.setBackground(Color.red);
-                    isPrime.setText("NOT A PRIME");
-                }
-            }
-
-            if (engine == 3) {
-                runTime = System.currentTimeMillis();
-                AKS tester = new AKS(n);
-
-                while (!tester.isFinished()) {
-                }
-
-                if (tester.isPrime()) {
-                    isPrime.setBackground(Color.green);
-                    isPrime.setText("IS A PRIME");
-                } else {
-                    isPrime.setBackground(Color.red);
-                    isPrime.setText("NOT A PRIME");
-                }
-            }
-
-            System.out.println("UI This FINISHES:" + Thread.currentThread().getName());
-            // On finish:
-            runTime = System.currentTimeMillis() - runTime;
-            runTimeField.setText(runTime + " ms");
-            startButton.setEnabled(true);
-
-
-        });
-
-
     }
+
+    private void enableButton() {
+            System.out.println("UI This FINISHES:" + Thread.currentThread().getName());
+            startButton.setEnabled(true);
+    }
+
+    private void showResult(Test tester) {
+        if (tester.isPrime()) {
+            isPrime.setBackground(Color.green);
+            isPrime.setText("IS A PRIME");
+        } else {
+            isPrime.setBackground(Color.red);
+            isPrime.setText("NOT A PRIME");
+        }
+        runTime = System.currentTimeMillis() - runTime;
+        runTimeField.setText(runTime + " ms");
+    }
+
+    private void startTest(Test tester) {
+        runTime = System.currentTimeMillis();
+        tester.test();
+        showResult(tester);
+        enableButton();
+    }
+
 
     @Override
     public void reset() {

@@ -37,12 +37,13 @@ import java.math.*;
  */
 
 
-public class AKS {
+public class AKS implements Test {
     private int log;
     private boolean sieveArray[];
     private int SIEVE_ERATOS_SIZE = 100000000;
     private boolean isPrime;
     private boolean isFinished;
+    private BigInteger number;
 
     /* function that computes the log of a big number*/
     public double logBigNum(BigInteger bNum) {
@@ -206,19 +207,8 @@ public class AKS {
     }
 
     /* main aks function */
-    public AKS(BigInteger input) {
-        sieveEratos();
-
-        boolean result = checkIsPrime(input);
-
-        if(result) {
-            isPrime = true;
-            isFinished = true;
-        }
-        else {
-            isPrime = false;
-            isFinished = true;
-        }
+    public AKS(BigInteger number) {
+        this.number = number;
     }
 
     /* function to check if a given number is prime or not */
@@ -272,5 +262,21 @@ public class AKS {
 
     public boolean isFinished() {
         return isFinished;
+    }
+
+    @Override
+    public void test() {
+        sieveEratos();
+
+        boolean result = checkIsPrime(number);
+
+        if(result) {
+            isPrime = true;
+            isFinished = true;
+        }
+        else {
+            isPrime = false;
+            isFinished = true;
+        }
     }
 }
