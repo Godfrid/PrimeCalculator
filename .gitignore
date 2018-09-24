@@ -30,4 +30,9 @@ codestyles
 colors.scheme.xml
 debugger.xml
 github_settings.xml
+workspace.xml
+.idea
+*.xml
+
+playground.java
 
